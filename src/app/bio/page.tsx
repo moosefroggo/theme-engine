@@ -1,6 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
+import Image from "next/image";
 import Link from "next/link";
 import { useTheme } from "@/components/theme-provider";
 import { MOCK_AUTHOR } from "@/lib/nextwork";
@@ -65,26 +66,34 @@ export default function BioPage() {
         animate="visible"
         className="relative pt-24 pb-12 px-4 flex flex-col items-center text-center overflow-hidden"
       >
-        {/* Pattern background layer */}
-        <div className="absolute inset-0 z-0 pattern-bg pointer-events-none" />
 
         <motion.div variants={item} className="z-10">
           <div className="flex items-center justify-center gap-3">
             <div
-              className="w-16 h-16 rounded-full bg-foreground text-background flex items-center justify-center text-lg font-bold font-display shadow-lg border-2 border-border"
+              className="w-16 h-16 rounded-full bg-background border-2 border-border flex items-center justify-center shadow-lg overflow-hidden p-2"
               style={{ borderRadius: "9999px" }}
             >
-              NW
+              <Image
+                src="/Nextwork Logo.svg"
+                alt="NextWork"
+                width={40}
+                height={40}
+                className="object-contain"
+              />
             </div>
             <span className="text-2xl text-muted-foreground font-light">×</span>
             <div
-              className="w-16 h-16 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-xl font-bold font-display shadow-lg"
+              className="w-16 h-16 rounded-full bg-muted border-2 border-border flex items-center justify-center shadow-lg overflow-hidden"
               style={{ borderRadius: "9999px" }}
             >
-              {name
-                .split(" ")
-                .map((n) => n[0])
-                .join("")}
+              <Image
+                src="https://i.pravatar.cc/150?u=mustafa"
+                alt={name}
+                width={64}
+                height={64}
+                className="object-cover"
+                unoptimized
+              />
             </div>
           </div>
         </motion.div>

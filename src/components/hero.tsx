@@ -2,6 +2,7 @@
 
 import { useEffect, useState, useCallback } from "react";
 import { motion } from "framer-motion";
+import Image from "next/image";
 import { useTheme } from "./theme-provider";
 
 export function Hero({
@@ -46,8 +47,6 @@ export function Hero({
 
   return (
     <section className="relative min-h-[80vh] flex flex-col items-center justify-center px-6 py-24 text-center overflow-hidden">
-      {/* PatternCraft background layer */}
-      <div className="absolute inset-0 z-0 pattern-bg pointer-events-none" />
 
       <motion.div
         key={animKey}
@@ -59,17 +58,30 @@ export function Hero({
         {/* NextWork × User branding */}
         <div className="flex items-center justify-center gap-3">
           <div
-            className="w-16 h-16 rounded-full bg-foreground text-background flex items-center justify-center text-lg font-bold font-display shadow-lg border-2 border-border"
+            className="w-16 h-16 rounded-full bg-background border-2 border-border flex items-center justify-center shadow-lg overflow-hidden p-2"
             style={{ borderRadius: "9999px" }}
           >
-            NW
+            <Image
+              src="/Nextwork Logo.svg"
+              alt="NextWork"
+              width={40}
+              height={40}
+              className="object-contain"
+            />
           </div>
           <span className="text-2xl text-muted-foreground font-light">×</span>
           <div
-            className="w-16 h-16 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-lg font-bold font-display shadow-lg"
+            className="w-16 h-16 rounded-full bg-muted border-2 border-border flex items-center justify-center shadow-lg overflow-hidden"
             style={{ borderRadius: "9999px" }}
           >
-            MA
+            <Image
+              src="https://i.pravatar.cc/150?u=mustafa"
+              alt="Mustafa"
+              width={64}
+              height={64}
+              className="object-cover"
+              unoptimized
+            />
           </div>
         </div>
 

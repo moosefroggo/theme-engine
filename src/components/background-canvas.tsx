@@ -30,7 +30,12 @@ export function BackgroundCanvas() {
       style.id = "bg-motion";
       style.textContent = `
         @keyframes bg-breathe {
-          0%, 100% { transform: scale(1) rotate(0deg); opacity: 0.25; }
+          0%   { transform: translate(0%, 0%) scale(1) rotate(0deg); opacity: 0.25; }
+          20%  { opacity: 0.45; }
+          50%  { transform: translate(1.5%, 1%) scale(1.03) rotate(0.6deg); opacity: 0.35; }
+          80%  { opacity: 0.5; }
+          100% { transform: translate(0%, 0%) scale(1) rotate(0deg); opacity: 0.25; }
+        }
           50%      { transform: scale(1.04) rotate(0.4deg); opacity: 0.5; }
         }
       `;
@@ -60,7 +65,7 @@ export function BackgroundCanvas() {
     background: css,
     maskImage: "linear-gradient(to bottom, black 50%, transparent 100%)",
     WebkitMaskImage: "linear-gradient(to bottom, black 50%, transparent 100%)",
-    animation: "bg-breathe 12s ease-in-out infinite",
+    animation: "bg-breathe 20s ease-in-out infinite",
   });
 
   return (
