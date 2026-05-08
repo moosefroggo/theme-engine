@@ -490,6 +490,7 @@ function themeTokensToCSSVars(theme: ThemeTokens): Record<string, string> {
 export function generateThemeByPersonality(
   personality: PersonalityName,
   baseColor?: string,
+  mode: 'light' | 'dark' = 'light',
 ): ThemeSeed {
   const def = getPersonality(personality);
 
@@ -513,13 +514,25 @@ export function generateThemeByPersonality(
   // ── Radius ────────────────────────────────────────────────────────
   const radius = randomRadiusInRange(def.radiusRange[0], def.radiusRange[1]);
 
-  // ── Colour palette ────────────────────────────────────────────────
-  const primaryHex = baseColor || rand.hex();
-  const primaryHsl = hexToHsl(primaryHex);
-  const themeConfig = createThemeConfig(primaryHsl);
+  // ── Colour palette with contrast validation ───────────────────────
+  // Retry up to 20 times if any critical pair fails WCAG AA (≥4.5:1).
+  let tokens: Record<string, string> = {};
+  let primaryHex = baseColor || rand.hex();
 
-  // Default to light tokens (personalities are content-first).
-  const tokens = themeTokensToCSSVars(themeConfig.light);
+  for (let attempt = 0; attempt < 20; attempt++) {
+    const primaryHsl = hexToHsl(primaryHex);
+    const themeConfig = createThemeConfig(primaryHsl);
+    tokens = themeTokensToCSSVars(mode === 'dark' ? themeConfig.dark : themeConfig.light);
+
+    if (validateThemeTokens(tokens)) break;
+
+    // Regenerate with a fresh random hex for the next attempt
+    primaryHex = rand.hex();
+    if (attempt === 19) {
+      // Last attempt — use whatever we got
+      tokens = themeTokensToCSSVars(mode === 'dark' ? themeConfig.dark : themeConfig.light);
+    }
+  }
 
   // Derive a compatible vibe for backwards-compatible consumers.
   const vibe = personalityToVibe(personality);
@@ -536,6 +549,91 @@ export function generateThemeByPersonality(
     backgroundType: "pattern",
     tokens,
   };
+}
+
+// ─── CONTRAST VALIDATION ─────────────────────────────────────────────
+
+/**
+ * Checks critical colour pairs for WCAG AA compliance (≥4.5:1 for
+ * normal text, ≥3:1 for large text).  Returns false if any pair is
+ * inaccessible — the caller should regenerate with a new hex.
+ */
+function validateThemeTokens(tokens: Record<string, string>): boolean {
+  // Force readable button text: dark text on bright primaries, light on dark.
+  const primaryStr = tokens["--primary"];
+  if (primaryStr) {
+    const primaryHsl = parseShadcnHsl(primaryStr);
+    if (primaryHsl) {
+      // Reject primaries that are too extreme.
+      if (primaryHsl.l > 82 || primaryHsl.l < 12) return false;
+      if (primaryHsl.s > 90 && primaryHsl.l > 50) return false;
+
+      // Smart text color: only use dark text on genuinely light primaries.
+      // High saturation + medium lightness = still needs white text.
+      const primaryColord = new Colord({ h: primaryHsl.h, s: primaryHsl.s, l: primaryHsl.l });
+      const isTrulyLight = primaryColord.isLight() && primaryHsl.s < 70;
+      if (isTrulyLight) {
+        tokens["--primary-foreground"] = "0 0% 8%";   // near-black on light primaries
+      } else {
+        tokens["--primary-foreground"] = "0 0% 98%";   // near-white on dark primaries
+      }
+    }
+  }
+
+  // Pairs that must have sufficient contrast for the UI to be usable.
+  const criticalPairs: Array<[string, string, number]> = [
+    ["--primary", "--primary-foreground", 4.5],   // buttons, badges
+    ["--background", "--foreground", 4.5],         // body text
+    ["--muted", "--muted-foreground", 4.5],        // muted sections
+    ["--card", "--card-foreground", 4.5],          // cards
+    ["--secondary", "--secondary-foreground", 4.5],
+    ["--destructive", "--destructive-foreground", 4.5],
+  ];
+
+  for (const [bgKey, fgKey, minRatio] of criticalPairs) {
+    const bgStr = tokens[bgKey];
+    const fgStr = tokens[fgKey];
+    if (!bgStr || !fgStr) continue;
+
+    const bgHsl = parseShadcnHsl(bgStr);
+    const fgHsl = parseShadcnHsl(fgStr);
+    if (!bgHsl || !fgHsl) continue;
+
+    const bg = new Colord({ h: bgHsl.h, s: bgHsl.s, l: bgHsl.l });
+    const fg = new Colord({ h: fgHsl.h, s: fgHsl.s, l: fgHsl.l });
+
+    if (bg.contrast(fg) < minRatio) return false;
+  }
+
+  return true;
+}
+
+/** Parse a Shadcn HSL string like "222 84% 4.9%" into { h, s, l }. */
+function parseShadcnHsl(value: string): Hsl | null {
+  const parts = value.trim().split(/\s+/);
+  if (parts.length !== 3) return null;
+  const h = parseFloat(parts[0]);
+  const s = parseFloat(parts[1]);
+  const l = parseFloat(parts[2]);
+  if (isNaN(h) || isNaN(s) || isNaN(l)) return null;
+  return { h, s, l };
+}
+
+
+/**
+ * Regenerate only the colour tokens from an existing seed, swapping
+ * light ↔ dark while keeping everything else identical.
+ */
+export function regenerateTokens(
+  seed: ThemeSeed,
+  mode: "light" | "dark",
+): Record<string, string> {
+  const primaryHsl = hexToHsl(seed.primaryColor);
+  const themeConfig = createThemeConfig(primaryHsl);
+  const tokens = themeTokensToCSSVars(
+    mode === "dark" ? themeConfig.dark : themeConfig.light,
+  );
+  return tokens;
 }
 
 // ─── BACKWARDS-COMPATIBLE VIBE GENERATOR ─────────────────────────────

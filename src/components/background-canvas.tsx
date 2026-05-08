@@ -5,10 +5,7 @@ import { useTheme } from "@/components/theme-provider";
 
 /**
  * BackgroundCanvas renders the current pattern from the theme seed as a
- * full-bleed fixed background layer with subtle ambient motion.
- *
- * When the pattern changes (e.g. after a shuffle), two overlapping divs
- * crossfade so the transition is smooth rather than a hard cut.
+ * full-bleed fixed background layer with a subtle continuous drift.
  *
  * R3F Canvas slot reserved for `seed.backgroundType === 'shader'`.
  */
@@ -21,27 +18,6 @@ export function BackgroundCanvas() {
 
   const layerARef = useRef<HTMLDivElement>(null);
   const layerBRef = useRef<HTMLDivElement>(null);
-
-  // Inject ambient motion keyframes once
-  useEffect(() => {
-    let style = document.getElementById("bg-motion");
-    if (!style) {
-      style = document.createElement("style");
-      style.id = "bg-motion";
-      style.textContent = `
-        @keyframes bg-breathe {
-          0%   { transform: translate(0%, 0%) scale(1) rotate(0deg); opacity: 0.25; }
-          20%  { opacity: 0.45; }
-          50%  { transform: translate(1.5%, 1%) scale(1.03) rotate(0.6deg); opacity: 0.35; }
-          80%  { opacity: 0.5; }
-          100% { transform: translate(0%, 0%) scale(1) rotate(0deg); opacity: 0.25; }
-        }
-          50%      { transform: scale(1.04) rotate(0.4deg); opacity: 0.5; }
-        }
-      `;
-      document.head.appendChild(style);
-    }
-  }, []);
 
   // Crossfade logic
   useEffect(() => {
@@ -65,6 +41,7 @@ export function BackgroundCanvas() {
     background: css,
     maskImage: "linear-gradient(to bottom, black 50%, transparent 100%)",
     WebkitMaskImage: "linear-gradient(to bottom, black 50%, transparent 100%)",
+    opacity: 0.35,
     animation: "bg-breathe 20s ease-in-out infinite",
   });
 

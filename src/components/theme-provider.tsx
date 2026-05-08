@@ -1,7 +1,7 @@
 "use client";
 
 import React, { createContext, useContext, useEffect, useState } from "react";
-import { generateThemeByPersonality, type ThemeSeed } from "@/lib/theme-engine";
+import { generateThemeByPersonality, regenerateTokens, type ThemeSeed } from "@/lib/theme-engine";
 import { ALL_FONTS_URL } from "@/lib/fonts";
 import {
   getRandomPersonality,
@@ -11,23 +11,28 @@ import {
 interface PersistedState {
   seed: ThemeSeed;
   personality: PersonalityName;
+  mode: "light" | "dark";
 }
 
 interface ThemeContextType {
   seed: ThemeSeed;
   personality: PersonalityName;
+  mode: "light" | "dark";
   /** Randomize within current personality (new colour + new picks from pools). */
   shuffle: () => void;
   /** Switch to a different personality (generates fresh seed). */
   switchPersonality: (name: PersonalityName) => void;
   /** Pick a random personality and generate a fresh seed. */
   randomizePersonality: () => void;
+  /** Toggle between light and dark mode. */
+  toggleMode: () => void;
 }
 
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
 const STORAGE_KEY = "nextwork-theme-seed";
 const PERSONALITY_KEY = "nextwork-theme-personality";
+const MODE_KEY = "nextwork-theme-mode";
 
 // Deterministic default that matches globals.css :root variables.
 // Server and client both start here to avoid hydration mismatch.
@@ -69,16 +74,20 @@ function loadPersistedState(): PersistedState | null {
   try {
     const rawSeed = localStorage.getItem(STORAGE_KEY);
     const rawPersonality = localStorage.getItem(PERSONALITY_KEY);
+    const rawMode = localStorage.getItem(MODE_KEY);
+    const mode = (rawMode === "dark" ? "dark" : "light") as "light" | "dark";
     if (rawSeed && rawPersonality) {
       return {
         seed: JSON.parse(rawSeed) as ThemeSeed,
         personality: rawPersonality as PersonalityName,
+        mode,
       };
     }
     if (rawSeed) {
       return {
         seed: JSON.parse(rawSeed) as ThemeSeed,
         personality: DEFAULT_PERSONALITY,
+        mode,
       };
     }
   } catch {
@@ -87,11 +96,16 @@ function loadPersistedState(): PersistedState | null {
   return null;
 }
 
-function savePersistedState(seed: ThemeSeed, personality: PersonalityName) {
+function savePersistedState(
+  seed: ThemeSeed,
+  personality: PersonalityName,
+  mode: "light" | "dark",
+) {
   if (typeof window === "undefined") return;
   try {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(seed));
     localStorage.setItem(PERSONALITY_KEY, personality);
+    localStorage.setItem(MODE_KEY, mode);
   } catch {
     // storage full or disabled — silently ignore
   }
@@ -102,12 +116,15 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
   const [seed, setSeed] = useState<ThemeSeed>(DEFAULT_SEED);
   const [personality, setPersonality] =
     useState<PersonalityName>(DEFAULT_PERSONALITY);
+  const [mode, setMode] = useState<"light" | "dark">("light");
+
   // After mount, load persisted seed (or generate a fresh one) and hydrate.
   useEffect(() => {
     const stored = loadPersistedState();
     if (stored) {
       setSeed(stored.seed);
       setPersonality(stored.personality);
+      setMode(stored.mode || "light");
     } else {
       const fresh = generateThemeByPersonality(DEFAULT_PERSONALITY);
       setSeed(fresh);
@@ -115,15 +132,23 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
     }
   }, []);
 
+  const toggleMode = () => {
+    const next = mode === "light" ? "dark" : "light";
+    setMode(next);
+    // Only swap colour tokens — preserve fonts, pattern, motion, radius
+    const tokens = regenerateTokens(seed, next);
+    setSeed({ ...seed, tokens });
+  };
+
   /** Randomize within the current personality — new colour + new picks from pools. */
   const shuffle = () => {
-    const newSeed = generateThemeByPersonality(personality);
+    const newSeed = generateThemeByPersonality(personality, undefined, mode);
     setSeed(newSeed);
   };
 
   /** Switch to a different personality (generates fresh seed). */
   const switchPersonality = (name: PersonalityName) => {
-    const newSeed = generateThemeByPersonality(name);
+    const newSeed = generateThemeByPersonality(name, undefined, mode);
     setPersonality(name);
     setSeed(newSeed);
   };
@@ -138,7 +163,7 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
 
   // Persist seed + personality on every change
   useEffect(() => {
-    savePersistedState(seed, personality);
+    savePersistedState(seed, personality, mode);
   }, [seed, personality]);
 
   // Inject CSS variables + pattern background into :root
@@ -163,21 +188,11 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
       document.head.appendChild(patternStyle);
     }
     patternStyle.textContent = `
-      @keyframes bg-breathe {
-        0%   { transform: translate(0%, 0%) scale(1) rotate(0deg); opacity: 0.25; }
-        20%  { opacity: 0.45; }
-        50%  { transform: translate(1.5%, 1%) scale(1.03) rotate(0.6deg); opacity: 0.35; }
-        80%  { opacity: 0.5; }
-        100% { transform: translate(0%, 0%) scale(1) rotate(0deg); opacity: 0.25; }
-      }
-        50%      { transform: scale(1.04) rotate(0.4deg); opacity: 0.5; }
-      }
       .pattern-bg {
         background: ${seed.pattern.css};
         mask-image: linear-gradient(to bottom, black 50%, transparent 100%);
         -webkit-mask-image: linear-gradient(to bottom, black 50%, transparent 100%);
-        opacity: 0.4;
-        animation: bg-breathe 20s ease-in-out infinite;
+        opacity: 0.35;
       }
     `;
 
@@ -191,9 +206,11 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
       value={{
         seed,
         personality,
+        mode,
         shuffle,
         switchPersonality,
         randomizePersonality,
+        toggleMode,
       }}
     >
       {/* Preload all fonts so swaps are instant */}

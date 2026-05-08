@@ -94,256 +94,26 @@ function hslToHex(hsl: Hsl): string {
 }
 
 // ---------------------------------------------------------------------------
-// Color derivation (lighten / darken using HSL shifts)
+// Date formatting (edge-safe — no Intl dependency)
 // ---------------------------------------------------------------------------
 
-function deriveColors(primaryHex: string) {
-  const primary = hexToHsl(primaryHex);
-
-  // Background: ultra-light or ultra-dark version of primary
-  const bgLight: Hsl = {
-    h: primary.h,
-    s: Math.max(0, primary.s - 60),
-    l: 97,
-  };
-  const bgDark: Hsl = {
-    h: primary.h,
-    s: Math.max(0, primary.s - 40),
-    l: 7,
-  };
-
-  // Determine if primary is "light" or "dark" by luminance
-  const isPrimaryLight = primary.l > 55;
-
-  // Foreground: contrast against background
-  const fgLight: Hsl = { h: primary.h, s: 10, l: 10 };
-  const fgDark: Hsl = { h: primary.h, s: 10, l: 93 };
-
-  // Muted foreground for secondary text
-  const mutedLight: Hsl = { h: primary.h, s: 8, l: 40 };
-  const mutedDark: Hsl = { h: primary.h, s: 8, l: 60 };
-
-  // Card background (slightly off from main bg)
-  const cardLight: Hsl = { h: primary.h, s: 20, l: 99 };
-  const cardDark: Hsl = { h: primary.h, s: 10, l: 12 };
-
-  const useDark = !isPrimaryLight;
-
-  return {
-    primary: primaryHex,
-    primaryHsl: primary,
-    background: hslToHex(useDark ? bgDark : bgLight),
-    foreground: hslToHex(useDark ? fgDark : fgLight),
-    muted: hslToHex(useDark ? mutedDark : mutedLight),
-    card: hslToHex(useDark ? cardDark : cardLight),
-    isDark: useDark,
-  };
-}
-
-// ---------------------------------------------------------------------------
-// Pattern generators (inline SVG backgrounds)
-// ---------------------------------------------------------------------------
-
-function getGridSvg(strokeColor: string, opacity: number): string {
-  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40"><rect width="40" height="40" fill="none" stroke="${strokeColor}" stroke-opacity="${opacity}" stroke-width="1"/></svg>`;
-  return `url("data:image/svg+xml,${encodeURIComponent(svg)}")`;
-}
-
-function getDotSvg(fillColor: string, opacity: number): string {
-  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><circle cx="12" cy="12" r="1.5" fill="${fillColor}" fill-opacity="${opacity}"/></svg>`;
-  return `url("data:image/svg+xml,${encodeURIComponent(svg)}")`;
-}
-
-function getDiagonalSvg(strokeColor: string, opacity: number): string {
-  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40"><line x1="0" y1="40" x2="40" y2="0" stroke="${strokeColor}" stroke-opacity="${opacity}" stroke-width="1"/><line x1="-20" y1="20" x2="20" y2="-20" stroke="${strokeColor}" stroke-opacity="${opacity}" stroke-width="1"/><line x1="20" y1="60" x2="60" y2="20" stroke="${strokeColor}" stroke-opacity="${opacity}" stroke-width="1"/></svg>`;
-  return `url("data:image/svg+xml,${encodeURIComponent(svg)}")`;
-}
-
-function getConcentricSvg(strokeColor: string, opacity: number): string {
-  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="60" height="60" viewBox="0 0 60 60"><circle cx="30" cy="30" r="8" fill="none" stroke="${strokeColor}" stroke-opacity="${opacity}" stroke-width="1"/><circle cx="30" cy="30" r="18" fill="none" stroke="${strokeColor}" stroke-opacity="${opacity * 0.7}" stroke-width="1"/><circle cx="30" cy="30" r="28" fill="none" stroke="${strokeColor}" stroke-opacity="${opacity * 0.4}" stroke-width="1"/></svg>`;
-  return `url("data:image/svg+xml,${encodeURIComponent(svg)}")`;
-}
-
-function getWaveSvg(strokeColor: string, opacity: number): string {
-  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="80" height="40" viewBox="0 0 80 40"><path d="M0 20 Q10 10 20 20 Q30 30 40 20 Q50 10 60 20 Q70 30 80 20" fill="none" stroke="${strokeColor}" stroke-opacity="${opacity}" stroke-width="1"/></svg>`;
-  return `url("data:image/svg+xml,${encodeURIComponent(svg)}")`;
-}
-
-// ---------------------------------------------------------------------------
-// Pattern selector by personality
-// ---------------------------------------------------------------------------
-
-function getPatternForPersonality(
-  personality: string,
-  colors: ReturnType<typeof deriveColors>,
-) {
-  const strokeColor = colors.primary.replace("#", "%23");
-  const opacity = colors.isDark ? 0.25 : 0.2;
-
-  switch (personality) {
-    case "clean":
-      return {
-        css: `${getGridSvg(strokeColor, opacity)}, ${getDotSvg(strokeColor, opacity * 0.6)}`,
-        accentShape: "circle" as const,
-      };
-    case "warm":
-      return {
-        css: `${getWaveSvg(strokeColor, opacity)}, ${getConcentricSvg(strokeColor, opacity * 0.5)}`,
-        accentShape: "blob" as const,
-      };
-    case "tech":
-      return {
-        css: `${getGridSvg(strokeColor, opacity * 1.2)}, ${getDiagonalSvg(strokeColor, opacity * 0.5)}`,
-        accentShape: "strip" as const,
-      };
-    case "expressive":
-      return {
-        css: `${getDiagonalSvg(strokeColor, opacity)}, ${getDotSvg(strokeColor, opacity * 0.8)}`,
-        accentShape: "circle" as const,
-      };
-    case "playful":
-      return {
-        css: `${getDotSvg(strokeColor, opacity * 1.2)}, ${getWaveSvg(strokeColor, opacity * 0.5)}`,
-        accentShape: "blob" as const,
-      };
-    default:
-      return {
-        css: `${getGridSvg(strokeColor, opacity)}`,
-        accentShape: "circle" as const,
-      };
-  }
-}
-
-// ---------------------------------------------------------------------------
-// Font configuration per personality
-// ---------------------------------------------------------------------------
-
-function getFontUrl(personality: string): string {
-  const displayFamilies: Record<string, string> = {
-    clean: "Inter",
-    warm: "Playfair+Display",
-    tech: "JetBrains+Mono",
-    expressive: "Bebas+Neue",
-    playful: "Fredoka",
-  };
-
-  const display = displayFamilies[personality] ?? "Inter";
-
-  return `https://fonts.googleapis.com/css2?family=${display}:wght@400;700;800&family=Inter:wght@400;500;600;700&display=swap`;
-}
-
-function getFontFamilies(personality: string): {
-  display: string;
-  body: string;
-} {
-  const map: Record<string, string> = {
-    clean: "Inter",
-    warm: "Playfair Display",
-    tech: "JetBrains Mono",
-    expressive: "Bebas Neue",
-    playful: "Fredoka",
-  };
-  return {
-    display: map[personality] ?? "Inter",
-    body: "Inter",
-  };
-}
-
-// ---------------------------------------------------------------------------
-// Load font data for Satori (matches family names used in JSX)
-// ---------------------------------------------------------------------------
-
-async function loadFonts(fontUrl: string, expectedFamilies: string[]) {
-  const fontData: Array<{
-    name: string;
-    data: ArrayBuffer;
-    weight: number;
-  }> = [];
-
-  try {
-    const fontResponse = await fetch(fontUrl);
-    if (!fontResponse.ok) throw new Error("Font fetch failed");
-    const fontCss = await fontResponse.text();
-
-    // Parse @font-face blocks to map URLs → family names.
-    // Google Fonts CSS format:
-    //   @font-face { font-family: 'Inter'; src: url(https://...) format('woff2'); }
-    const ffRegex =
-      /@font-face\s*\{[^}]*font-family:\s*['"]([^'"]+)['"][^}]*url\((https:\/\/[^)]+)\)[^}]*\}/g;
-    const urlToFamily = new Map<string, string>();
-    let ffm: RegExpExecArray | null;
-    while ((ffm = ffRegex.exec(fontCss)) !== null) {
-      const family = ffm[1];
-      const url = ffm[2];
-      if (!urlToFamily.has(url)) {
-        urlToFamily.set(url, family);
-      }
-    }
-
-    // Fallback: if regex didn't match, extract URLs and guess families
-    if (urlToFamily.size === 0) {
-      const simpleRegex = /url\((https:\/\/[^)]+)\)/g;
-      let sm: RegExpExecArray | null;
-      while ((sm = simpleRegex.exec(fontCss)) !== null) {
-        const url = sm[1];
-        const guessedFamily =
-          expectedFamilies.find((f) =>
-            url.toLowerCase().includes(f.toLowerCase().replace(/\s+/g, "+")),
-          ) ?? expectedFamilies[0];
-        if (!urlToFamily.has(url)) {
-          urlToFamily.set(url, guessedFamily);
-        }
-      }
-    }
-
-    // Load each unique family once
-    const seen = new Set<string>();
-    for (const [url, family] of urlToFamily) {
-      const key = family.toLowerCase();
-      if (seen.has(key)) continue;
-      seen.add(key);
-
-      try {
-        const res = await fetch(url);
-        if (res.ok) {
-          fontData.push({
-            name: family,
-            data: await res.arrayBuffer(),
-            weight: 700,
-          });
-        }
-      } catch {
-        // Skip failed loads
-      }
-    }
-  } catch {
-    // Font CSS fetch failed; proceed without custom fonts
-  }
-
-  // Ensure each expected family is present at least once
-  for (const family of expectedFamilies) {
-    if (!fontData.some((f) => f.name === family)) {
-      try {
-        // Try a direct woff2 URL for Inter (most common fallback)
-        if (family === "Inter") {
-          const res = await fetch(
-            "https://fonts.gstatic.com/s/inter/v18/UcC73FwrK3iLTeHuS_nVMrMxCp50SjIa1ZL7W0Q5nw.woff2",
-          );
-          if (res.ok) {
-            fontData.push({
-              name: "Inter",
-              data: await res.arrayBuffer(),
-              weight: 700,
-            });
-          }
-        }
-      } catch {
-        // Proceed without this family
-      }
-    }
-  }
-
-  return fontData;
+function formatDate(dateStr: string): string {
+  const d = new Date(dateStr);
+  const months = [
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December",
+  ];
+  return `${months[d.getUTCMonth()]}, ${d.getUTCFullYear()}`;
 }
 
 // ---------------------------------------------------------------------------
@@ -352,89 +122,83 @@ async function loadFonts(fontUrl: string, expectedFamilies: string[]) {
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
-  const name = searchParams.get("name") || "Portfolio";
-  const tagline = searchParams.get("tagline") || "";
-  const personality = searchParams.get("personality") || "clean";
-  const primaryColor = searchParams.get("primaryColor") || "#0a0a0a";
+  const name = searchParams.get("name") || "";
+  const title = searchParams.get("title") || "";
+  const date = searchParams.get("date") || "";
+  const primaryColor = searchParams.get("primaryColor") || "#3b82f6";
+  const mode = searchParams.get("mode") || "dark";
 
-  // Validate personality
-  const validPersonalities = ["clean", "warm", "tech", "expressive", "playful"];
-  const safePersonality = validPersonalities.includes(personality)
-    ? personality
-    : "clean";
+  const isDark = mode !== "light";
 
-  // Validate hex color (basic)
+  // Validate hex color
   const hexRegex = /^#[0-9a-fA-F]{6}$/;
-  const safeColor = hexRegex.test(primaryColor) ? primaryColor : "#0a0a0a";
+  const safeColor = hexRegex.test(primaryColor) ? primaryColor : "#3b82f6";
 
-  const colors = deriveColors(safeColor);
-  const pattern = getPatternForPersonality(safePersonality, colors);
-  const fonts = getFontFamilies(safePersonality);
-  const fontUrl = getFontUrl(safePersonality);
+  const bg = isDark ? "#0d0d12" : "#ffffff";
+  const fg = isDark ? "#ffffff" : "#0d0d12";
+  const muted = isDark ? "#a1a1aa" : "#71717a";
 
-  // Load fonts — pass both expected family names so they're correctly mapped
-  const fontData = await loadFonts(fontUrl, [fonts.display, fonts.body]);
+  const formattedDate = date ? formatDate(date) : "";
 
-  // ── Accent Shape Renderer ──────────────────────────────────────────
+  // ── Load Inter font from Google Fonts ──────────────────────────────
 
-  const AccentShape = () => {
-    if (pattern.accentShape === "strip") {
-      return (
-        <div
-          style={{
-            position: "absolute",
-            top: 0,
-            left: 0,
-            width: "100%",
-            height: 8,
-            backgroundColor: colors.primary,
-            display: "flex",
-          }}
-        />
-      );
+  const fontUrl =
+    "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap";
+
+  const fontData: Array<{
+    name: string;
+    data: ArrayBuffer;
+    weight: number;
+  }> = [];
+
+  try {
+    const fontResponse = await fetch(fontUrl);
+    if (fontResponse.ok) {
+      const fontCss = await fontResponse.text();
+      const urlRegex = /url\((https:\/\/[^)]+)\)/g;
+      let match: RegExpExecArray | null;
+      const seen = new Set<string>();
+      while ((match = urlRegex.exec(fontCss)) !== null) {
+        const url = match[1];
+        if (seen.has(url)) continue;
+        seen.add(url);
+        try {
+          const res = await fetch(url);
+          if (res.ok) {
+            fontData.push({
+              name: "Inter",
+              data: await res.arrayBuffer(),
+              weight: 700,
+            });
+          }
+        } catch {
+          // Skip individual font file failures
+        }
+      }
     }
-    if (pattern.accentShape === "blob") {
-      return (
-        <div
-          style={{
-            position: "absolute",
-            top: -120,
-            right: -80,
-            width: 360,
-            height: 360,
-            borderRadius: "50%",
-            backgroundColor: colors.primary,
-            opacity: 0.12,
-            display: "flex",
-          }}
-        />
-      );
-    }
-    // circle (default)
-    return (
-      <div
-        style={{
-          position: "absolute",
-          top: 40,
-          right: 40,
-          width: 120,
-          height: 120,
-          borderRadius: "50%",
-          backgroundColor: colors.primary,
-          opacity: 0.18,
-          display: "flex",
-        }}
-      />
-    );
-  };
+  } catch {
+    // Font CSS fetch failed; proceed without custom fonts
+  }
 
-  // User initials (max 2 chars)
-  const initials = name
-    .split(" ")
-    .map((n) => n[0])
-    .join("")
-    .toUpperCase()
-    .slice(0, 2);
+  // Fallback: direct woff2 for Inter if nothing loaded
+  if (fontData.length === 0) {
+    try {
+      const res = await fetch(
+        "https://fonts.gstatic.com/s/inter/v18/UcC73FwrK3iLTeHuS_nVMrMxCp50SjIa1ZL7W0Q5nw.woff2",
+      );
+      if (res.ok) {
+        fontData.push({
+          name: "Inter",
+          data: await res.arrayBuffer(),
+          weight: 700,
+        });
+      }
+    } catch {
+      // Proceed without custom fonts
+    }
+  }
+
+  // ── Render ─────────────────────────────────────────────────────────
 
   return new ImageResponse(
     <div
@@ -444,190 +208,89 @@ export async function GET(request: Request) {
         display: "flex",
         flexDirection: "column",
         justifyContent: "center",
-        alignItems: "flex-start",
-        backgroundColor: colors.background,
-        color: colors.foreground,
-        fontFamily: `"${fonts.body}", "Inter", sans-serif`,
+        alignItems: "center",
+        backgroundColor: bg,
+        color: fg,
+        fontFamily: '"Inter", sans-serif',
         position: "relative",
         overflow: "hidden",
         padding: 80,
       }}
     >
-      {/* Pattern background layers */}
+      {/* Top accent strip */}
       <div
         style={{
           position: "absolute",
-          inset: 0,
-          backgroundImage: pattern.css,
+          top: 0,
+          left: 0,
+          width: "100%",
+          height: 6,
+          backgroundColor: safeColor,
           display: "flex",
         }}
       />
 
-      {/* Accent decorative element */}
-      <AccentShape />
-
-      {/* Secondary accent: small colored circle bottom-left */}
-      <div
-        style={{
-          position: "absolute",
-          bottom: 40,
-          left: 40,
-          width: 48,
-          height: 48,
-          borderRadius: "50%",
-          backgroundColor: colors.primary,
-          opacity: 0.35,
-          display: "flex",
-        }}
-      />
-
-      {/* NW Badge - top left */}
-      <div
-        style={{
-          display: "flex",
-          alignItems: "center",
-          gap: 12,
-          marginBottom: 60,
-          position: "relative",
-          zIndex: 10,
-        }}
+      {/* NextWork wordmark */}
+      <svg
+        width="234"
+        height="48"
+        viewBox="0 0 156 32"
+        fill="none"
+        style={{ marginBottom: 56 }}
       >
-        <div
-          style={{
-            width: 56,
-            height: 56,
-            borderRadius: "50%",
-            backgroundColor: colors.primary,
-            color: "#ffffff",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            fontSize: 22,
-            fontWeight: 800,
-            fontFamily: `"${fonts.display}", "Inter", sans-serif`,
-          }}
-        >
-          NW
-        </div>
-        <span
-          style={{
-            fontSize: 20,
-            color: colors.muted,
-            fontWeight: 400,
-          }}
-        >
-          &times;
-        </span>
-        <div
-          style={{
-            width: 56,
-            height: 56,
-            borderRadius: "50%",
-            backgroundColor: colors.card,
-            color: colors.foreground,
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            fontSize: 22,
-            fontWeight: 800,
-            fontFamily: `"${fonts.display}", "Inter", sans-serif`,
-            border: `2px solid ${colors.primary}`,
-          }}
-        >
-          {initials}
-        </div>
-      </div>
+        <g clipPath="url(#nw-clip)">
+          <path
+            d="M30.7426 9.7718C29.9368 7.86648 28.7832 6.15552 27.3138 4.68616C25.8445 3.21682 24.1335 2.06318 22.2282 1.25745C20.2552 0.423088 18.1598 0 16 0C13.8402 0 11.7448 0.423088 9.7718 1.25745C7.86648 2.06318 6.15552 3.21682 4.68616 4.68616C3.21682 6.15552 2.06318 7.86648 1.25745 9.7718C0.423088 11.7448 0 13.8402 0 16C0 18.1598 0.423088 20.2552 1.25745 22.2282C2.06318 24.1335 3.21682 25.8445 4.68616 27.3138C6.15552 28.7832 7.86648 29.9368 9.7718 30.7426C11.7448 31.5769 13.8402 32 16 32C18.1598 32 20.2552 31.5769 22.2282 30.7426C24.1335 29.9368 25.8445 28.7832 27.3138 27.3138C28.7832 25.8445 29.9368 24.1335 30.7426 22.2282C31.5769 20.2552 32 18.1598 32 16C32 13.8402 31.5769 11.7448 30.7426 9.7718ZM21.8098 2.24644C23.5869 2.99812 25.1834 4.07444 26.5543 5.44536C27.9252 6.81628 29.0015 8.41272 29.7532 10.1899C30.4036 11.7276 30.7859 13.3459 30.894 15.0124L28.897 13.7679C24.4771 11.0132 20.3178 7.80172 16.5344 4.22264L13.4364 1.29217C14.2769 1.14684 15.1324 1.07382 15.9996 1.07382C18.0148 1.07382 19.9696 1.46828 21.8094 2.24644H21.8098ZM10.1902 2.24644C10.836 1.97333 11.496 1.74783 12.1675 1.56958L15.7967 5.0026C19.6192 8.61852 23.82 11.864 28.2835 14.6506C20.3504 12.6214 12.8279 9.37808 5.90784 5.00332C7.17136 3.84179 8.60884 2.91544 10.1902 2.24644ZM2.24644 10.1902C2.93834 8.55444 3.90586 7.0722 5.12428 5.77788C11.9442 10.119 19.3442 13.3734 27.1463 15.4631H1.08349C1.14756 13.6376 1.53772 11.8661 2.2468 10.1902H2.24644ZM2.24644 21.8098C1.53772 20.1339 1.1472 18.3624 1.08313 16.5369H27.1714C19.3614 18.6248 11.951 21.8796 5.12428 26.2225C3.90586 24.9278 2.93834 23.4459 2.24644 21.8098ZM5.9082 26.997C12.8312 22.6234 20.3586 19.3804 28.2942 17.3534L28.1596 17.4378C23.7913 20.1768 19.6739 23.3586 15.9216 26.8943L12.1682 30.4308C11.4964 30.2525 10.8363 30.027 10.1902 29.7536C8.6092 29.0849 7.17172 28.1586 5.90856 26.997H5.9082ZM29.7536 21.8098C29.0019 23.5869 27.9256 25.1834 26.5546 26.5543C25.1837 27.9252 23.5873 29.0015 21.8101 29.7532C19.9703 30.5314 18.0156 30.9258 16.0004 30.9258C15.1341 30.9258 14.2794 30.8528 13.4396 30.7078L16.6582 27.675C20.3597 24.1872 24.4216 21.0488 28.7306 18.347L30.8943 16.9904C30.7859 18.6559 30.4039 20.2728 29.7539 21.8094L29.7536 21.8098Z"
+            fill={fg}
+          />
+        </g>
+        <path
+          d="M114.943 9.72364L110.603 24.7895H108.324C108.281 24.6341 104.988 12.6479 104.946 12.4952L101.68 24.7895H99.4021L95.0616 9.72364H97.7399L100.668 21.0361L103.709 9.72364H106.296L109.337 21.0361L112.265 9.72364H114.943ZM125.665 24.6341C118.589 26.9223 114.138 20.1779 116.553 13.8109C118.213 9.31174 124.594 8.15868 127.963 11.3937C131.703 14.9514 130.877 22.8754 125.665 24.6341ZM124.775 12.004C120.968 10.6936 118.4 13.5584 118.552 17.3131C118.539 19.5399 119.271 21.7799 121.389 22.6222C123.733 23.5881 126.524 22.283 127.234 19.8222C128.066 17.1756 127.692 13.1425 124.775 12.0046V12.004ZM142.466 5.45587V24.7967H144.951V5.45587H142.466ZM76.9749 15.1961L73.0834 9.72364H70.1525L75.5098 17.2569L70.1525 24.7895H73.0834L76.9749 19.3171L80.8665 24.7895H83.7974L78.4401 17.2569C78.448 17.2457 83.7862 9.73951 83.7974 9.72364H80.8665L76.9749 15.1961ZM69.049 18.0628H57.3941C57.4305 20.2215 58.5194 21.9623 60.4354 22.6804C62.6728 23.4645 65.3597 22.7491 66.2668 20.4754H68.8381C68.0321 23.4433 65.2176 25.1888 62.1049 25.1557C57.5336 25.2886 54.5935 21.5749 54.7125 17.2853C54.4097 8.80331 65.9402 6.25521 68.6351 14.4133C68.9888 15.5372 69.1283 16.765 69.0483 18.0635L69.049 18.0628ZM66.4229 15.9438C66.2087 10.1435 57.6341 10.1303 57.4206 15.9438H66.4229ZM52.0513 24.7895C51.964 23.005 52.2913 14.4423 51.7888 12.8972C51.4331 11.5114 50.6999 10.4489 49.4146 9.89091C46.9135 8.90182 43.4847 9.59273 42.1723 12.1012V9.72364H39.687V24.7895H42.1723V16.609C42.1313 13.7739 43.4298 11.6007 46.2067 11.6172C48.9835 11.4936 49.6579 13.7865 49.5654 16.0179V24.7888H52.0506L52.0513 24.7895ZM154.429 9.72364H151.498L146.14 17.2569L151.498 24.7895H154.429L149.071 17.2569L154.429 9.72364ZM137.034 11.7898L139.803 11.7865L139.8 9.72364L136.469 9.72761C135.065 9.72893 134.162 10.0992 133.626 10.8919C133.148 11.602 132.935 12.6883 132.936 14.4133L132.948 24.7967H135.433L135.422 14.244C135.422 13.3706 135.46 12.8225 135.664 12.4278C135.893 11.9874 136.315 11.7904 137.034 11.7898ZM88.0916 23.083C88.202 23.5961 88.3759 23.9623 88.6378 24.2367C89.129 24.7511 89.9363 24.9514 91.5164 24.9514H93.3591V22.8589H92.085C91.3055 22.8589 90.9187 22.7432 90.7072 22.447C90.4963 22.1521 90.4592 21.6919 90.4592 20.8351V11.7329H93.3591V9.72562H90.4592V5.45785H87.9402V9.72562H85.5237V11.7329H87.9402V21.1478C87.9402 21.9888 87.9885 22.6037 88.0916 23.0837V23.083Z"
+          fill={fg}
+        />
+        <defs>
+          <clipPath id="nw-clip">
+            <rect width="32" height="32" fill="white" />
+          </clipPath>
+        </defs>
+      </svg>
 
-      {/* Name - large display text */}
-      <div
-        style={{
-          fontSize: 72,
-          fontWeight: 800,
-          fontFamily: `"${fonts.display}", "Inter", sans-serif`,
-          lineHeight: 1.1,
-          letterSpacing: "-0.02em",
-          color: colors.foreground,
-          marginBottom: 16,
-          maxWidth: "90%",
-          position: "relative",
-          zIndex: 10,
-          display: "flex",
-        }}
-      >
-        {name}
-      </div>
-
-      {/* Tagline */}
-      {tagline && (
+      {/* Project title */}
+      {title && (
         <div
           style={{
-            fontSize: 28,
-            fontWeight: 400,
-            fontFamily: `"${fonts.body}", "Inter", sans-serif`,
-            color: colors.muted,
-            maxWidth: "80%",
-            lineHeight: 1.4,
-            marginBottom: 80,
-            position: "relative",
-            zIndex: 10,
+            fontSize: 64,
+            fontWeight: 800,
+            lineHeight: 1.1,
+            letterSpacing: "-0.02em",
+            color: fg,
+            marginBottom: 28,
+            maxWidth: "88%",
+            textAlign: "center",
             display: "flex",
           }}
         >
-          {tagline}
+          {title}
         </div>
       )}
 
-      {/* Bottom section */}
-      <div
-        style={{
-          position: "absolute",
-          bottom: 40,
-          right: 80,
-          display: "flex",
-          alignItems: "center",
-          gap: 8,
-          zIndex: 10,
-        }}
-      >
+      {/* Author name | Month, Year */}
+      {(name || formattedDate) && (
         <div
           style={{
-            width: 28,
-            height: 28,
-            borderRadius: "50%",
-            backgroundColor: colors.primary,
-            color: "#ffffff",
             display: "flex",
             alignItems: "center",
-            justifyContent: "center",
-            fontSize: 12,
-            fontWeight: 700,
-            fontFamily: `"${fonts.display}", "Inter", sans-serif`,
-          }}
-        >
-          NW
-        </div>
-        <span
-          style={{
-            fontSize: 18,
+            gap: 16,
+            fontSize: 24,
             fontWeight: 500,
-            color: colors.muted,
-            fontFamily: `"${fonts.body}", "Inter", sans-serif`,
+            color: muted,
           }}
         >
-          Built with NextWork
-        </span>
-        <span
-          style={{
-            fontSize: 16,
-            fontWeight: 400,
-            color: colors.muted,
-            opacity: 0.6,
-            fontFamily: `"${fonts.body}", "Inter", sans-serif`,
-          }}
-        >
-          &middot; nextwork.org
-        </span>
-      </div>
+          {name && <span>{name}</span>}
+          {name && formattedDate && <span style={{ opacity: 0.4 }}>|</span>}
+          {formattedDate && <span>{formattedDate}</span>}
+        </div>
+      )}
     </div>,
     {
       width: 1200,

@@ -17,7 +17,7 @@ export const metadata: Metadata = {
     siteName: "NextWork",
     images: [
       {
-        url: `${BASE_URL}/og?name=Mustafa&tagline=Full-stack+developer&personality=clean&primaryColor=%230a0a0a`,
+        url: `${BASE_URL}/og?name=Mei&tagline=Full-stack+developer&personality=clean&primaryColor=%230a0a0a`,
         width: 1200,
         height: 630,
         alt: "NextWork Portfolio Generator — Build your portfolio in seconds.",
@@ -31,7 +31,7 @@ export const metadata: Metadata = {
     description:
       "Generate beautiful, themed developer portfolios with procedural colors, fonts, patterns, and motion.",
     images: [
-      `${BASE_URL}/og?name=Mustafa&tagline=Full-stack+developer&personality=clean&primaryColor=%230a0a0a`,
+      `${BASE_URL}/og?name=Mei&tagline=Full-stack+developer&personality=clean&primaryColor=%230a0a0a`,
     ],
   },
 };

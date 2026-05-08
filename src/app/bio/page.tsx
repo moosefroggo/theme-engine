@@ -70,7 +70,7 @@ export default function BioPage() {
         <motion.div variants={item} className="z-10">
           <div className="flex items-center justify-center gap-3">
             <div
-              className="w-16 h-16 rounded-full bg-background border-2 border-border flex items-center justify-center shadow-lg overflow-hidden p-2"
+              className="w-16 h-16 rounded-full bg-white flex items-center justify-center shadow-lg overflow-hidden p-2 border border-border"
               style={{ borderRadius: "9999px" }}
             >
               <Image
@@ -87,7 +87,7 @@ export default function BioPage() {
               style={{ borderRadius: "9999px" }}
             >
               <Image
-                src="https://i.pravatar.cc/150?u=mustafa"
+                src="https://randomuser.me/api/portraits/women/12.jpg"
                 alt={name}
                 width={64}
                 height={64}

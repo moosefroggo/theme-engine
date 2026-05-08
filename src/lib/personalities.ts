@@ -8,97 +8,178 @@
 
 // ─── TYPES ────────────────────────────────────────────────────────────
 
-export type PersonalityName = "clean" | "warm" | "tech" | "expressive" | "playful";
+export type PersonalityName =
+  | "clean"
+  | "warm"
+  | "tech"
+  | "expressive"
+  | "playful";
 
 export interface Personality {
   name: PersonalityName;
-  /** Human-readable display name */
   label: string;
-  /** Short description shown in the UI */
   description: string;
-  /** Font pair NAMES — must match names in fonts.ts FONT_PAIRS exactly */
   fontPool: string[];
-  /** Pattern categories to pull from */
   patternCategory: Array<"gradient" | "geometric" | "decorative" | "effects">;
-  /** Motion profile NAMES — must match names in motion.ts exactly */
   motionPool: string[];
-  /** Radius range [min, max] as CSS length strings, e.g. ["0.25rem", "0.75rem"] */
   radiusRange: [string, string];
 }
+
+// ─── FULL FONT POOLS (all 60 pairs, grouped by category) ─────────────
+
+const GEOMETRIC_FONTS = [
+  "Geometric",
+  "Operator",
+  "Swiss",
+  "Modernist",
+  "Round",
+  "Jakarta",
+  "Classic",
+  "Line",
+  "Hat Trick",
+  "Grove",
+  "Clarity",
+  "Lodge",
+  "Titan",
+  "Epilogue",
+] as const;
+
+const EDITORIAL_FONTS = [
+  "Editorial",
+  "Magazine",
+  "Serif Harmony",
+  "Art Book",
+  "Luxury",
+  "Literary",
+  "Variable",
+  "Fashion",
+  "Crimson",
+  "Literata",
+  "Vollkorn",
+  "Cardo",
+  "Prata",
+  "Alegreya",
+  "Newspaper",
+  "Ibarra",
+  "Libre Caslon",
+] as const;
+
+const MONO_FONTS = [
+  "Terminal",
+  "Brutalist",
+  "Tech",
+  "Plex",
+  "Dev",
+  "Adobe",
+  "Console",
+  "Ubuntu Code",
+  "Courier",
+  "Circuit",
+  "Overpass Code",
+] as const;
+
+const ORGANIC_FONTS = [
+  "Fluid",
+  "Soft",
+  "Elegant Soft",
+  "Friendly",
+  "Comfort",
+  "Baloo",
+  "Sora",
+  "Grand",
+] as const;
+
+const DISPLAY_FONTS = [
+  "Bold",
+  "Architect",
+  "Impact",
+  "Deco",
+  "Press",
+  "Teko",
+  "Big Shoulders",
+  "Alfa",
+  "Righteous",
+  "Fredoka",
+] as const;
 
 // ─── PERSONALITY DEFINITIONS ──────────────────────────────────────────
 
 export const PERSONALITIES: Record<PersonalityName, Personality> = {
-  // ── Clean: Minimal, anonymous, grid-based ──────────────────────────
   clean: {
     name: "clean",
     label: "Clean",
-    description: "Minimal, anonymous, grid-based. Let the work speak.",
-    fontPool: ["Operator", "Swiss", "Clarity"],
+    description: "Minimal, anonymous, grid-based.",
+    fontPool: [...GEOMETRIC_FONTS, ...EDITORIAL_FONTS.filter((_, i) => i < 4)], // geometric + top 4 editorial
     patternCategory: ["geometric"],
     motionPool: ["Smooth Tween", "Crisp Fade", "Gentle Spring"],
     radiusRange: ["0.25rem", "0.5rem"],
   },
 
-  // ── Warm: Organic, earthy, inviting ───────────────────────────────
   warm: {
     name: "warm",
     label: "Warm",
-    description: "Organic, earthy, inviting. Feels like a cosy studio.",
-    fontPool: ["Comfort", "Baloo", "Sora", "Elegant Soft"],
+    description: "Organic, earthy, inviting.",
+    fontPool: [
+      ...ORGANIC_FONTS,
+      ...EDITORIAL_FONTS.filter((_, i) => i >= 4 && i < 10),
+    ],
     patternCategory: ["gradient", "decorative"],
     motionPool: ["Gentle Spring", "Soft Reveal", "Smooth Tween"],
     radiusRange: ["0.5rem", "1rem"],
   },
 
-  // ── Tech: Developer, monospace, high-contrast ─────────────────────
   tech: {
     name: "tech",
     label: "Tech",
-    description: "Developer, monospace, high-contrast. Terminal chic.",
-    fontPool: ["Tech", "Terminal", "Dev", "Plex", "Overpass Code"],
+    description: "Developer, monospace, high-contrast.",
+    fontPool: [...MONO_FONTS, ...GEOMETRIC_FONTS.filter((_, i) => i < 3)],
     patternCategory: ["geometric", "effects"],
-    motionPool: ["Mechanical Spring", "Instant Tween", "Sharp Snap", "Cyber Glitch"],
+    motionPool: [
+      "Mechanical Spring",
+      "Instant Tween",
+      "Sharp Snap",
+      "Cyber Glitch",
+    ],
     radiusRange: ["0rem", "0.25rem"],
   },
 
-  // ── Expressive: Bold, loud, maximalist ────────────────────────────
   expressive: {
     name: "expressive",
     label: "Expressive",
-    description: "Bold, loud, maximalist. Makes a statement.",
-    fontPool: ["Bold", "Architect", "Impact", "Press", "Teko"],
+    description: "Bold, loud, maximalist.",
+    fontPool: [...DISPLAY_FONTS, ...EDITORIAL_FONTS.filter((_, i) => i >= 10)],
     patternCategory: ["effects", "gradient"],
     motionPool: ["Bouncy Spring", "Elastic Snap", "Fast Bounce", "Playful Pop"],
     radiusRange: ["0.5rem", "1.5rem"],
   },
 
-  // ── Playful: Soft, bouncy, colourful ──────────────────────────────
   playful: {
     name: "playful",
     label: "Playful",
-    description: "Soft, bouncy, colourful. Feels like Saturday morning.",
-    fontPool: ["Fluid", "Friendly", "Fredoka", "Round"],
+    description: "Soft, bouncy, colourful.",
+    fontPool: [...ORGANIC_FONTS, ...DISPLAY_FONTS.filter((_, i) => i < 4)],
     patternCategory: ["gradient", "decorative", "effects"],
-    motionPool: ["Wobbly Reveal", "Fast Bounce", "Playful Pop", "Bouncy Spring"],
+    motionPool: [
+      "Wobbly Reveal",
+      "Fast Bounce",
+      "Playful Pop",
+      "Bouncy Spring",
+    ],
     radiusRange: ["0.75rem", "1.5rem"],
   },
 };
 
 // ─── HELPERS ──────────────────────────────────────────────────────────
 
-/** Get a personality definition by name. */
 export function getPersonality(name: PersonalityName): Personality {
   return PERSONALITIES[name];
 }
 
-/** Pick a random personality. */
 export function getRandomPersonality(): Personality {
   const names = Object.keys(PERSONALITIES) as PersonalityName[];
   return PERSONALITIES[names[Math.floor(Math.random() * names.length)]];
 }
 
-/** Pick a random item from a pool (generic helper). */
-export function getRandomFromPool<T>(pool: T[]): T {
+export function getRandomFromPool<T>(pool: readonly T[]): T {
   return pool[Math.floor(Math.random() * pool.length)];
 }

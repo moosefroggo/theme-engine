@@ -6,17 +6,15 @@ import { useEffect, useRef, useState } from "react";
 
 const PERSONALITY_NAMES = Object.keys(PERSONALITIES) as PersonalityName[];
 
-/**
- * Floating personality switcher panel.
- *
- * Fixed to the bottom-right of the viewport.
- * - Clicking the label text opens a popover to switch personalities.
- * - Clicking the shuffle icon randomizes within the current personality.
- * - The popover includes a "Random" button to pick a random personality.
- */
 export function ShuffleButton() {
-  const { personality, shuffle, switchPersonality, randomizePersonality } =
-    useTheme();
+  const {
+    personality,
+    mode,
+    shuffle,
+    switchPersonality,
+    randomizePersonality,
+    toggleMode,
+  } = useTheme();
   const [open, setOpen] = useState(false);
   const panelRef = useRef<HTMLDivElement>(null);
 
@@ -79,10 +77,8 @@ export function ShuffleButton() {
             );
           })}
 
-          {/* Divider */}
           <div className="mx-3 my-1 border-t border-border" />
 
-          {/* Randomize button */}
           <button
             onClick={() => {
               randomizePersonality();
@@ -90,7 +86,6 @@ export function ShuffleButton() {
             }}
             className="w-full text-left px-3 py-2 rounded-lg text-sm font-medium text-muted-foreground hover:bg-muted transition-colors duration-150 flex items-center gap-2"
           >
-            {/* Dice icon */}
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="14"
@@ -115,51 +110,93 @@ export function ShuffleButton() {
         </div>
       )}
 
-      {/* Main pill */}
-      <div className="flex items-center gap-1 bg-primary text-primary-foreground rounded-full shadow-lg transition-all duration-300 ease-out">
-        {/* Label — opens popover on click */}
+      {/* Controls row: dark mode + personality pill side by side */}
+      <div className="flex items-center gap-3">
+        {/* Dark mode toggle */}
         <button
-          onClick={() => setOpen((prev) => !prev)}
-          className="pl-5 pr-1 py-3 text-sm font-semibold transition-all duration-300 ease-out hover:opacity-80"
-          aria-expanded={open}
-          aria-haspopup="listbox"
+          onClick={toggleMode}
+          className="w-10 h-10 rounded-full bg-background border border-border text-foreground flex items-center justify-center shadow-md hover:bg-muted transition-colors"
+          aria-label={`Switch to ${mode === "light" ? "dark" : "light"} mode`}
         >
-          {def.label}
+          {mode === "light" ? (
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
+            </svg>
+          ) : (
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <circle cx="12" cy="12" r="5" />
+              <line x1="12" y1="1" x2="12" y2="3" />
+              <line x1="12" y1="21" x2="12" y2="23" />
+              <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" />
+              <line x1="18.36" y1="18.36" x2="19.78" y2="19.78" />
+              <line x1="1" y1="12" x2="3" y2="12" />
+              <line x1="21" y1="12" x2="23" y2="12" />
+              <line x1="4.22" y1="19.78" x2="5.64" y2="18.36" />
+              <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" />
+            </svg>
+          )}
         </button>
 
-        {/* Divider */}
-        <span
-          className="w-px h-5 bg-primary-foreground/20"
-          aria-hidden="true"
-        />
-
-        {/* Shuffle icon — randomizes within current personality */}
-        <button
-          onClick={() => shuffle()}
-          className="pr-4 pl-2 py-3 group transition-all duration-300 ease-out hover:scale-105 active:scale-95"
-          aria-label="Shuffle within current personality"
-          title="Shuffle colours and patterns"
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="16"
-            height="16"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            className="transition-transform duration-300 ease-out group-hover:rotate-180"
-            aria-hidden="true"
+        {/* Personality + shuffle pill */}
+        <div className="flex items-center gap-1 bg-primary text-primary-foreground rounded-full shadow-lg transition-all duration-300 ease-out">
+          <button
+            onClick={() => setOpen((prev) => !prev)}
+            className="pl-5 pr-1 py-3 text-sm font-semibold transition-all duration-300 ease-out hover:opacity-80"
+            aria-expanded={open}
+            aria-haspopup="listbox"
           >
-            <path d="M2 18h1.4c1.3 0 2.5-.6 3.3-1.7l6.1-8.6c.7-1.1 2-1.7 3.3-1.7H22" />
-            <path d="m18 2 4 4-4 4" />
-            <path d="M2 6h1.9c1.5 0 2.9.9 3.6 2.2" />
-            <path d="M22 18h-5.9c-1.3 0-2.6-.7-3.3-1.8l-.5-.8" />
-            <path d="m18 14 4 4-4 4" />
-          </svg>
-        </button>
+            {def.label}
+          </button>
+          <span
+            className="w-px h-5 bg-primary-foreground/20"
+            aria-hidden="true"
+          />
+          <button
+            onClick={() => shuffle()}
+            className="pr-4 pl-2 py-3 group transition-all duration-300 ease-out hover:scale-105 active:scale-95"
+            aria-label="Shuffle within current personality"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              className="transition-transform duration-300 ease-out group-hover:rotate-180"
+              aria-hidden="true"
+            >
+              <path d="M2 18h1.4c1.3 0 2.5-.6 3.3-1.7l6.1-8.6c.7-1.1 2-1.7 3.3-1.7H22" />
+              <path d="m18 2 4 4-4 4" />
+              <path d="M2 6h1.9c1.5 0 2.9.9 3.6 2.2" />
+              <path d="M22 18h-5.9c-1.3 0-2.6-.7-3.3-1.8l-.5-.8" />
+              <path d="m18 14 4 4-4 4" />
+            </svg>
+          </button>
+        </div>
       </div>
     </div>
   );

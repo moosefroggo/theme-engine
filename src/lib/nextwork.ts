@@ -60,7 +60,7 @@ Each planet features a tooltip card that displays key facts — diameter, distan
       "Tailwind CSS",
     ],
     author: {
-      name: "Mustafa",
+      name: "Mei",
       avatar: "/avatars/mustafa.png",
     },
     date: "2025-06-15",
@@ -93,7 +93,7 @@ Additional features include a table-of-contents generator that scans heading lev
       "Redis",
     ],
     author: {
-      name: "Mustafa",
+      name: "Mei",
       avatar: "/avatars/mustafa.png",
     },
     date: "2025-05-28",
@@ -126,7 +126,7 @@ The backend uses Next.js API routes with rate limiting and prompt validation to 
       "Zod",
     ],
     author: {
-      name: "Mustafa",
+      name: "Mei",
       avatar: "/avatars/mustafa.png",
     },
     date: "2025-04-10",
@@ -152,7 +152,7 @@ The analytics engine pre-computes aggregates and caches them in Redis, making da
     ],
     techStack: ["Node.js", "Express", "PostgreSQL", "Redis", "JWT", "Docker"],
     author: {
-      name: "Mustafa",
+      name: "Mei",
       avatar: "/avatars/mustafa.png",
     },
     date: "2025-03-22",
@@ -184,7 +184,7 @@ The 7-day forecast uses a responsive line chart with temperature range bands, wh
       "Vite",
     ],
     author: {
-      name: "Mustafa",
+      name: "Mei",
       avatar: "/avatars/mustafa.png",
     },
     date: "2025-02-14",
@@ -210,7 +210,7 @@ I implemented a tag-based discovery system where related posts are linked at the
     ],
     techStack: ["Next.js", "MDX", "Satori", "Fuse.js", "RSS", "Vercel"],
     author: {
-      name: "Mustafa",
+      name: "Mei",
       avatar: "/avatars/mustafa.png",
     },
     date: "2025-01-08",
@@ -221,7 +221,7 @@ I implemented a tag-based discovery system where related posts are linked at the
 // ─── MOCK AUTHOR ──────────────────────────────────────────────────────
 
 export const MOCK_AUTHOR: NextWorkAuthor = {
-  name: "Mustafa",
+  name: "Mei",
   avatar: "/avatars/mustafa.png",
   bio: `I'm a full-stack developer passionate about building tools that make other developers more productive. With over 8 years of experience across frontend, backend, and infrastructure, I love diving deep into the technologies that power modern web applications.
 
