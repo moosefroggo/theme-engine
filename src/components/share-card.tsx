@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef, useState, useCallback } from "react";
-import { toPng } from "html-to-image";
+import html2canvas from "html2canvas";
 import { useTheme } from "@/components/theme-provider";
 import { MOCK_PROJECTS } from "@/lib/nextwork";
 
@@ -39,11 +39,13 @@ export function ShareCard({
     setError(null);
 
     try {
-      const dataUrl = await toPng(cardRef.current, {
-        quality: 1.0,
-        pixelRatio: 2,
-        cacheBust: true,
+      const canvas = await html2canvas(cardRef.current, {
+        scale: 2,
+        useCORS: true,
+        allowTaint: true,
+        backgroundColor: null,
       });
+      const dataUrl = canvas.toDataURL("image/png");
 
       // Trigger download
       const link = document.createElement("a");
