@@ -363,7 +363,7 @@ export default function CaseStudyPage({
         >
           Deep Dive
         </motion.h2>
-        <motion.div variants={item} className="space-y-10">
+        <motion.div variants={item} className="space-y-32">
           {paragraphs.map((para, i) => (
             <div key={i}>
               <p
