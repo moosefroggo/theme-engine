@@ -69,7 +69,7 @@ Each planet features a tooltip card that displays key facts — diameter, distan
     ],
     author: {
       name: "Mei",
-      avatar: "/avatars/mustafa.png",
+      avatar: "https://randomuser.me/api/portraits/women/12.jpg",
     },
     date: "2025-06-15",
     liveUrl: "https://solar-system-demo.vercel.app",
@@ -108,7 +108,7 @@ Additional features include a table-of-contents generator that scans heading lev
     ],
     author: {
       name: "Mei",
-      avatar: "/avatars/mustafa.png",
+      avatar: "https://randomuser.me/api/portraits/women/12.jpg",
     },
     date: "2025-05-28",
     liveUrl: "https://markdown-editor-demo.vercel.app",
@@ -147,7 +147,7 @@ The backend uses Next.js API routes with rate limiting and prompt validation to 
     ],
     author: {
       name: "Mei",
-      avatar: "/avatars/mustafa.png",
+      avatar: "https://randomuser.me/api/portraits/women/12.jpg",
     },
     date: "2025-04-10",
     liveUrl: "https://ai-image-gen.vercel.app",
@@ -178,7 +178,7 @@ The analytics engine pre-computes aggregates and caches them in Redis, making da
     ],
     author: {
       name: "Mei",
-      avatar: "/avatars/mustafa.png",
+      avatar: "https://randomuser.me/api/portraits/women/12.jpg",
     },
     date: "2025-03-22",
     sourceCodeUrl: "https://github.com/nextwork/habit-tracker-api",
@@ -216,7 +216,7 @@ The 7-day forecast uses a responsive line chart with temperature range bands, wh
     ],
     author: {
       name: "Mei",
-      avatar: "/avatars/mustafa.png",
+      avatar: "https://randomuser.me/api/portraits/women/12.jpg",
     },
     date: "2025-02-14",
     liveUrl: "https://weather-dash-demo.vercel.app",
@@ -248,7 +248,7 @@ I implemented a tag-based discovery system where related posts are linked at the
     ],
     author: {
       name: "Mei",
-      avatar: "/avatars/mustafa.png",
+      avatar: "https://randomuser.me/api/portraits/women/12.jpg",
     },
     date: "2025-01-08",
     sourceCodeUrl: "https://github.com/nextwork/dev-blog-engine",
@@ -298,7 +298,7 @@ Throughout this challenge, I gained hands-on experience with the core DevOps wor
       "/aws-devops-github_6becb2bc.png",
       "/aws-devops-github_c94976902.png",
     ],
-    author: { name: "Natasha Ong", avatar: "/avatars/mustafa.png" },
+    author: { name: "Natasha Ong", avatar: "https://randomuser.me/api/portraits/women/12.jpg" },
     date: "2025-04-20",
     sourceCodeUrl: "https://github.com/nextwork/aws-devops-github",
   },
@@ -308,7 +308,7 @@ Throughout this challenge, I gained hands-on experience with the core DevOps wor
 
 export const MOCK_AUTHOR: NextWorkAuthor = {
   name: "Mei",
-  avatar: "/avatars/mustafa.png",
+  avatar: "https://randomuser.me/api/portraits/women/12.jpg",
   bio: `I'm a full-stack developer passionate about building tools that make other developers more productive. With over 8 years of experience across frontend, backend, and infrastructure, I love diving deep into the technologies that power modern web applications.
 
 I believe the best projects come from scratching your own itch — every project in this portfolio started as something I personally wanted to use. When I'm not coding, you'll find me writing about developer tooling, contributing to open-source projects, or exploring the latest advancements in web rendering and animation.

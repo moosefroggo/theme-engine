@@ -177,9 +177,11 @@ export default function CaseStudyPage({
             </Link>
           </motion.div>
 
-
           {/* Logo squares */}
-          <motion.div variants={item} className="flex items-center justify-center gap-3 pt-2">
+          <motion.div
+            variants={item}
+            className="flex items-center justify-center gap-3 pt-2"
+          >
             <div className="w-14 h-14 rounded-2xl bg-white flex items-center justify-center shadow-md overflow-hidden p-1.5 border border-border">
               <img
                 src="/Nextwork Logo.svg"
@@ -187,10 +189,12 @@ export default function CaseStudyPage({
                 className="object-contain w-full h-full"
               />
             </div>
-            <span className="text-xl text-muted-foreground font-light">&times;</span>
+            <span className="text-xl text-muted-foreground font-light">
+              &times;
+            </span>
             <div className="w-14 h-14 rounded-2xl bg-muted border-2 border-border flex items-center justify-center shadow-md overflow-hidden">
               <img
-                src={project.author.avatar}
+                src="https://randomuser.me/api/portraits/women/12.jpg"
                 alt={project.author.name}
                 className="object-cover w-full h-full"
               />
