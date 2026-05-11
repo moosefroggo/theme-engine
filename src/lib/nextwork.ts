@@ -11,6 +11,7 @@ export interface NextWorkProject {
   description: string;
   goals: string[];
   techStack: string[];
+  images?: string[];
   author: {
     name: string;
     avatar: string;
@@ -215,6 +216,53 @@ I implemented a tag-based discovery system where related posts are linked at the
     },
     date: "2025-01-08",
     sourceCodeUrl: "https://github.com/nextwork/dev-blog-engine",
+  },
+  {
+    slug: "aws-devops-github",
+    title: "Connect a GitHub Repo with AWS",
+    overview:
+      "Project 2 of the 6 Day DevOps Challenge — learn the basics of Git with GitHub and connect your repository to AWS for automated deployments.",
+    description: `This project is part of the 6 Day DevOps Challenge where I learned to connect a GitHub repository with AWS. I went through the complete workflow of setting up version control with Git, linking a GitHub repo to AWS services, and automating the deployment pipeline.
+
+The project covered:
+- Initializing a Git repository and committing code
+- Creating a GitHub repository and pushing code remotely
+- Connecting GitHub to AWS using IAM roles and webhooks
+- Setting up automated deployments triggered by pushes
+- Managing infrastructure as code with AWS CloudFormation
+- Implementing CI/CD best practices for cloud applications
+
+Throughout this challenge, I gained hands-on experience with the core DevOps workflows that power modern cloud development — from making my first commit to seeing code deploy automatically to AWS.`,
+    goals: [
+      "Learn the basics of Git version control",
+      "Create and manage a GitHub repository",
+      "Connect GitHub with AWS using IAM and webhooks",
+      "Automate deployments from GitHub to AWS",
+      "Practice infrastructure as code with CloudFormation",
+      "Complete the 6 Day DevOps Challenge workflow",
+    ],
+    techStack: [
+      "Git",
+      "GitHub",
+      "AWS",
+      "IAM",
+      "CloudFormation",
+      "CodeDeploy",
+      "S3",
+      "EC2",
+    ],
+    images: [
+      "/aws-devops-github_dd9d254e.png",
+      "/aws-devops-github_efaadbf7.png",
+      "/aws-devops-github_7bf21bae.png",
+      "/aws-devops-github_9a27ee3b.png",
+      "/aws-devops-github_fa11169d.png",
+      "/aws-devops-github_6becb2bc.png",
+      "/aws-devops-github_c94976902.png",
+    ],
+    author: { name: "Natasha Ong", avatar: "/avatars/mustafa.png" },
+    date: "2025-04-20",
+    sourceCodeUrl: "https://github.com/nextwork/aws-devops-github",
   },
 ];
 

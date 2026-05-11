@@ -324,15 +324,26 @@ export default function CaseStudyPage({
         >
           Deep Dive
         </motion.h2>
-        <motion.div variants={item} className="space-y-4">
+        <motion.div variants={item} className="space-y-6">
           {paragraphs.map((para, i) => (
-            <p
-              key={i}
-              className="text-foreground leading-relaxed font-body"
-              style={{ maxWidth: "65ch" }}
-            >
-              {para}
-            </p>
+            <div key={i}>
+              <p
+                className="text-foreground leading-relaxed font-body"
+                style={{ maxWidth: "65ch" }}
+              >
+                {para}
+              </p>
+              {project.images && project.images[i] && (
+                <div className="mt-4 mb-6">
+                  <img
+                    src={project.images[i]}
+                    alt={`Screenshot for section ${i + 1}`}
+                    className="object-contain max-w-full h-auto rounded-xl border border-border"
+                    style={{ maxHeight: 320 }}
+                  />
+                </div>
+              )}
+            </div>
           ))}
         </motion.div>
       </motion.section>
@@ -474,7 +485,7 @@ function ProjectCardDownload({ project }: { project: { title: string; overview: 
           backgroundColor: cardBg,
           fontFamily: seed.fontBody,
           position: "relative", overflow: "hidden", padding: "80px 90px",
-          justifyContent: "center", gap: 56
+          justifyContent: "center", alignItems: "center", textAlign: "center", gap: 56
         }}>
           {/* Pattern background */}
           <div style={{
@@ -491,11 +502,11 @@ function ProjectCardDownload({ project }: { project: { title: string; overview: 
           </div>
           <div style={{
             fontSize: 72, fontWeight: 800, color: cardFg,
-            fontFamily: seed.fontDisplay, lineHeight: 1.1, maxWidth: "90%", letterSpacing: "-0.02em"
+            fontFamily: seed.fontDisplay, lineHeight: 1.1, maxWidth: "90%", letterSpacing: "-0.02em", textAlign: "center"
           }}>
             {project.title}
           </div>
-          <div style={{ fontSize: 26, color: cardMuted }}>
+          <div style={{ fontSize: 26, color: cardMuted, textAlign: "center" }}>
             {project.author.name} \ {(() => {
   const d = new Date(project.date);
   return d.toLocaleDateString("en-US", { month: "long", year: "numeric" });
