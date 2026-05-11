@@ -47,7 +47,6 @@ export function Hero({
 
   return (
     <section className="relative min-h-[80vh] flex flex-col items-center justify-center px-6 py-24 text-center overflow-hidden">
-
       <motion.div
         key={animKey}
         initial={{ opacity: 0, y: 20, scale: 0.98 }}
@@ -57,10 +56,7 @@ export function Hero({
       >
         {/* NextWork × User branding */}
         <div className="flex items-center justify-center gap-3">
-          <div
-            className="w-16 h-16 rounded-full bg-white flex items-center justify-center shadow-lg overflow-hidden p-2 border border-border"
-            style={{ borderRadius: "9999px" }}
-          >
+          <div className="w-16 h-16 rounded-2xl bg-white flex items-center justify-center shadow-lg overflow-hidden p-2 border border-border">
             <Image
               src="/Nextwork Logo.svg"
               alt="NextWork"
@@ -70,10 +66,7 @@ export function Hero({
             />
           </div>
           <span className="text-2xl text-muted-foreground font-light">×</span>
-          <div
-            className="w-16 h-16 rounded-full bg-muted border-2 border-border flex items-center justify-center shadow-lg overflow-hidden"
-            style={{ borderRadius: "9999px" }}
-          >
+          <div className="w-16 h-16 rounded-2xl bg-muted border-2 border-border flex items-center justify-center shadow-lg overflow-hidden">
             <Image
               src="https://randomuser.me/api/portraits/women/12.jpg"
               alt="Mei"
