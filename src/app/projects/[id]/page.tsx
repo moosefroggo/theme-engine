@@ -148,7 +148,7 @@ export default function CaseStudyPage({
         variants={container}
         initial="hidden"
         animate="visible"
-        className="relative min-h-[60vh] flex flex-col items-center justify-center px-4 py-20 text-center overflow-hidden"
+        className="relative min-h-[60vh] flex flex-col items-center justify-center px-4 py-28 text-center overflow-hidden"
       >
         {/* Pattern background layer */}
         <div className="absolute inset-0 z-0 pattern-bg pointer-events-none" />
@@ -198,7 +198,7 @@ export default function CaseStudyPage({
           {/* Tech stack badges */}
           <motion.div
             variants={item}
-            className="flex flex-wrap items-center justify-center gap-2 pt-2"
+            className="flex flex-wrap items-center justify-center gap-3 pt-4"
           >
             {project.techStack.map((tech) => (
               <span
@@ -270,7 +270,7 @@ export default function CaseStudyPage({
         initial="hidden"
         whileInView="visible"
         viewport={{ once: true, margin: "-80px" }}
-        className="max-w-3xl mx-auto px-4 pb-16"
+        className="max-w-3xl mx-auto px-4 pb-20"
       >
         <motion.h2
           variants={item}
@@ -316,7 +316,7 @@ export default function CaseStudyPage({
         initial="hidden"
         whileInView="visible"
         viewport={{ once: true, margin: "-80px" }}
-        className="max-w-3xl mx-auto px-4 pb-16"
+        className="max-w-3xl mx-auto px-4 pb-20"
       >
         <motion.h2
           variants={item}
