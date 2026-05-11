@@ -287,11 +287,11 @@ export default function CaseStudyPage({
         initial="hidden"
         whileInView="visible"
         viewport={{ once: true, margin: "-80px" }}
-        className="max-w-3xl mx-auto px-4 py-16"
+        className="max-w-3xl mx-auto px-4 py-24"
       >
         <motion.h2
           variants={item}
-          className="text-2xl font-bold font-display mb-4"
+          className="text-2xl font-bold font-display mb-8"
         >
           Overview
         </motion.h2>
@@ -309,15 +309,15 @@ export default function CaseStudyPage({
         initial="hidden"
         whileInView="visible"
         viewport={{ once: true, margin: "-80px" }}
-        className="max-w-3xl mx-auto px-4 pb-20"
+        className="max-w-3xl mx-auto px-4 py-24"
       >
         <motion.h2
           variants={item}
-          className="text-2xl font-bold font-display mb-6"
+          className="text-2xl font-bold font-display mb-8"
         >
           Goals
         </motion.h2>
-        <motion.ol variants={item} className="space-y-3">
+        <motion.ol variants={item} className="space-y-5">
           {project.goals.map((goal, i) => (
             <motion.li
               key={i}
@@ -355,15 +355,15 @@ export default function CaseStudyPage({
         initial="hidden"
         whileInView="visible"
         viewport={{ once: true, margin: "-80px" }}
-        className="max-w-3xl mx-auto px-4 pb-20"
+        className="max-w-3xl mx-auto px-4 py-24"
       >
         <motion.h2
           variants={item}
-          className="text-2xl font-bold font-display mb-6"
+          className="text-2xl font-bold font-display mb-8"
         >
           Deep Dive
         </motion.h2>
-        <motion.div variants={item} className="space-y-6">
+        <motion.div variants={item} className="space-y-10">
           {paragraphs.map((para, i) => (
             <div key={i}>
               <p
@@ -373,7 +373,7 @@ export default function CaseStudyPage({
                 {para}
               </p>
               {project.images && project.images[i] && (
-                <div className="mt-4 mb-6">
+                <div className="mt-8 mb-10">
                   <img
                     src={project.images[i]}
                     alt={`Screenshot for section ${i + 1}`}
@@ -394,11 +394,11 @@ export default function CaseStudyPage({
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true, margin: "-80px" }}
-          className="max-w-3xl mx-auto px-4 pb-24"
+          className="max-w-3xl mx-auto px-4 py-24"
         >
           <motion.h2
             variants={item}
-            className="text-2xl font-bold font-display mb-6"
+            className="text-2xl font-bold font-display mb-8"
           >
             Links
           </motion.h2>
