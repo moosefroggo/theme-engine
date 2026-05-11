@@ -60,6 +60,13 @@ Each planet features a tooltip card that displays key facts — diameter, distan
       "TypeScript",
       "Tailwind CSS",
     ],
+        images: [
+      "https://placehold.co/1200x600/1a1a2e/fff?text=Solar+System+Overview",
+      "https://placehold.co/1200x600/16213e/fff?text=3D+Rendering+Setup",
+      "https://placehold.co/1200x600/0f3460/fff?text=Orbital+Mechanics",
+      "https://placehold.co/1200x600/533483/fff?text=Camera+Transitions",
+      "https://placehold.co/1200x600/e94560/fff?text=Final+Result",
+    ],
     author: {
       name: "Mei",
       avatar: "/avatars/mustafa.png",
@@ -92,6 +99,12 @@ Additional features include a table-of-contents generator that scans heading lev
       "Marked",
       "PostCSS",
       "Redis",
+    ],
+        images: [
+      "https://placehold.co/1200x600/1b1b2f/fff?text=Markdown+Editor+Preview",
+      "https://placehold.co/1200x600/264653/fff?text=WebSocket+Sync+Setup",
+      "https://placehold.co/1200x600/2a9d8f/fff?text=Split+Pane+Layout",
+      "https://placehold.co/1200x600/e9c46a/333?text=Dark+Mode+Toggle",
     ],
     author: {
       name: "Mei",
@@ -126,6 +139,12 @@ The backend uses Next.js API routes with rate limiting and prompt validation to 
       "Framer Motion",
       "Zod",
     ],
+        images: [
+      "https://placehold.co/1200x600/1a1a3e/fff?text=AI+Image+Generator",
+      "https://placehold.co/1200x600/393e46/fff?text=Prompt+Engineering",
+      "https://placehold.co/1200x600/00adb5/fff?text=Infinite+Scroll+Gallery",
+      "https://placehold.co/1200x600/f08a5d/fff?text=Image+to+Image+Mode",
+    ],
     author: {
       name: "Mei",
       avatar: "/avatars/mustafa.png",
@@ -152,6 +171,11 @@ The analytics engine pre-computes aggregates and caches them in Redis, making da
       "Generate OpenAPI documentation automatically",
     ],
     techStack: ["Node.js", "Express", "PostgreSQL", "Redis", "JWT", "Docker"],
+        images: [
+      "https://placehold.co/1200x600/1b262c/fff?text=Habit+Tracker+API",
+      "https://placehold.co/1200x600/3282b8/fff?text=REST+Endpoints",
+      "https://placehold.co/1200x600/0f4c75/fff?text=Streak+Tracker+Logic",
+    ],
     author: {
       name: "Mei",
       avatar: "/avatars/mustafa.png",
@@ -184,6 +208,12 @@ The 7-day forecast uses a responsive line chart with temperature range bands, wh
       "Geolocation API",
       "Vite",
     ],
+        images: [
+      "https://placehold.co/1200x600/0c2233/fff?text=Weather+Dashboard",
+      "https://placehold.co/1200x600/1a508b/fff?text=OpenWeather+API",
+      "https://placehold.co/1200x600/39a6a3/fff?text=Chart.js+Integration",
+      "https://placehold.co/1200x600/bf1363/fff?text=Responsive+Layout",
+    ],
     author: {
       name: "Mei",
       avatar: "/avatars/mustafa.png",
@@ -210,6 +240,12 @@ I implemented a tag-based discovery system where related posts are linked at the
       "Implement client-side search with Fuse.js",
     ],
     techStack: ["Next.js", "MDX", "Satori", "Fuse.js", "RSS", "Vercel"],
+        images: [
+      "https://placehold.co/1200x600/1a1c29/fff?text=Dev+Blog+Engine",
+      "https://placehold.co/1200x600/6246ea/fff?text=MDX+Parsing",
+      "https://placehold.co/1200x600/d1d1e9/333?text=OG+Image+Generation",
+      "https://placehold.co/1200x600/e45858/fff?text=RSS+Feed+Setup",
+    ],
     author: {
       name: "Mei",
       avatar: "/avatars/mustafa.png",
