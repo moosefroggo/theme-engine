@@ -35,54 +35,7 @@ export interface NextWorkAuthor {
 // ─── MOCK PROJECTS ────────────────────────────────────────────────────
 
 export const MOCK_PROJECTS: NextWorkProject[] = [
-  
   {
-    slug: "aws-devops-github",
-    title: "Connect a GitHub Repo with AWS",
-    overview:
-      "Project 2 of the 6 Day DevOps Challenge — learn the basics of Git with GitHub and connect your repository to AWS for automated deployments.",
-    description: `This project is part of the 6 Day DevOps Challenge where I learned to connect a GitHub repository with AWS. I went through the complete workflow of setting up version control with Git, linking a GitHub repo to AWS services, and automating the deployment pipeline.
-
-Today we are here to set up a Git repository for our web app's code. This is project two in our 7 day DevOps challenge.
-
-Git is a version control system, which means it's used to track changes that we make to our code. It's also incredibly helpful for debugging when issues crop up, because you can look back at your commit history. GitHub is a platform that lets us store and share and collaborate on our code!
-
-A Git repository is like an online folder that you can use to store your web app's code and all the versions of that code. I ran "git init" in our web app project folder, which initialized git in our local repository. After running git init, the response from the terminal was that we initialized Git.
-
-To push local changes to GitHub, I ran three commands. The first command I ran was "git add ." which adds our changes to a staging area. The second command I ran was "git commit", which is the command for saving the changes in our staging area. The third command we ran was "git push -u origin master", which pushes the code changes we saved to our remote or online repository.
-
-When we committed changes to GitHub, Git asked for our credentials because it needs to authenticate us before letting us make changes to the repository.
-
-Throughout this challenge, I gained hands-on experience with the core DevOps workflows that power modern cloud development — from making my first commit to seeing code deploy automatically to AWS.`,
-    goals: [
-      "Learn the basics of Git version control",
-      "Create and manage a GitHub repository",
-      "Connect GitHub with AWS using IAM and webhooks",
-      "Automate deployments from GitHub to AWS",
-      "Practice infrastructure as code with CloudFormation",
-      "Complete the 6 Day DevOps Challenge workflow",
-    ],
-    techStack: [
-      "Git",
-      "GitHub",
-      "AWS",
-      "IAM",
-      "CloudFormation",
-      "CodeDeploy",
-      "S3",
-      "EC2",
-    ],
-    images: [
-      "/aws-devops-github_dd9d254e.png",
-      "/aws-devops-github_efaadbf7.png",
-      "/aws-devops-github_7bf21bae.png",
-      "/aws-devops-github_9a27ee3b.png",
-      "/aws-devops-github_fa11169d.png",
-      "/aws-devops-github_6becb2bc.png",
-      "/aws-devops-github_c94976902.png",
-    ],
-    author: { name: "Natasha Ong", avatar: "/avatars/mustafa.png" },
-{
     slug: "interactive-solar-system",
     title: "Interactive 3D Solar System",
     overview:
@@ -300,7 +253,52 @@ I implemented a tag-based discovery system where related posts are linked at the
     date: "2025-01-08",
     sourceCodeUrl: "https://github.com/nextwork/dev-blog-engine",
   },
-  
+  {
+    slug: "aws-devops-github",
+    title: "Connect a GitHub Repo with AWS",
+    overview:
+      "Project 2 of the 6 Day DevOps Challenge — learn the basics of Git with GitHub and connect your repository to AWS for automated deployments.",
+    description: `This project is part of the 6 Day DevOps Challenge where I learned to connect a GitHub repository with AWS. I went through the complete workflow of setting up version control with Git, linking a GitHub repo to AWS services, and automating the deployment pipeline.
+
+Today we are here to set up a Git repository for our web app's code. This is project two in our 7 day DevOps challenge.
+
+Git is a version control system, which means it's used to track changes that we make to our code. It's also incredibly helpful for debugging when issues crop up, because you can look back at your commit history. GitHub is a platform that lets us store and share and collaborate on our code!
+
+A Git repository is like an online folder that you can use to store your web app's code and all the versions of that code. I ran "git init" in our web app project folder, which initialized git in our local repository. After running git init, the response from the terminal was that we initialized Git.
+
+To push local changes to GitHub, I ran three commands. The first command I ran was "git add ." which adds our changes to a staging area. The second command I ran was "git commit", which is the command for saving the changes in our staging area. The third command we ran was "git push -u origin master", which pushes the code changes we saved to our remote or online repository.
+
+When we committed changes to GitHub, Git asked for our credentials because it needs to authenticate us before letting us make changes to the repository.
+
+Throughout this challenge, I gained hands-on experience with the core DevOps workflows that power modern cloud development — from making my first commit to seeing code deploy automatically to AWS.`,
+    goals: [
+      "Learn the basics of Git version control",
+      "Create and manage a GitHub repository",
+      "Connect GitHub with AWS using IAM and webhooks",
+      "Automate deployments from GitHub to AWS",
+      "Practice infrastructure as code with CloudFormation",
+      "Complete the 6 Day DevOps Challenge workflow",
+    ],
+    techStack: [
+      "Git",
+      "GitHub",
+      "AWS",
+      "IAM",
+      "CloudFormation",
+      "CodeDeploy",
+      "S3",
+      "EC2",
+    ],
+    images: [
+      "/aws-devops-github_dd9d254e.png",
+      "/aws-devops-github_efaadbf7.png",
+      "/aws-devops-github_7bf21bae.png",
+      "/aws-devops-github_9a27ee3b.png",
+      "/aws-devops-github_fa11169d.png",
+      "/aws-devops-github_6becb2bc.png",
+      "/aws-devops-github_c94976902.png",
+    ],
+    author: { name: "Natasha Ong", avatar: "/avatars/mustafa.png" },
     date: "2025-04-20",
     sourceCodeUrl: "https://github.com/nextwork/aws-devops-github",
   },
