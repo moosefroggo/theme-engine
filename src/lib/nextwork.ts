@@ -224,13 +224,15 @@ I implemented a tag-based discovery system where related posts are linked at the
       "Project 2 of the 6 Day DevOps Challenge — learn the basics of Git with GitHub and connect your repository to AWS for automated deployments.",
     description: `This project is part of the 6 Day DevOps Challenge where I learned to connect a GitHub repository with AWS. I went through the complete workflow of setting up version control with Git, linking a GitHub repo to AWS services, and automating the deployment pipeline.
 
-The project covered:
-- Initializing a Git repository and committing code
-- Creating a GitHub repository and pushing code remotely
-- Connecting GitHub to AWS using IAM roles and webhooks
-- Setting up automated deployments triggered by pushes
-- Managing infrastructure as code with AWS CloudFormation
-- Implementing CI/CD best practices for cloud applications
+Today we are here to set up a Git repository for our web app's code. This is project two in our 7 day DevOps challenge.
+
+Git is a version control system, which means it's used to track changes that we make to our code. It's also incredibly helpful for debugging when issues crop up, because you can look back at your commit history. GitHub is a platform that lets us store and share and collaborate on our code!
+
+A Git repository is like an online folder that you can use to store your web app's code and all the versions of that code. I ran "git init" in our web app project folder, which initialized git in our local repository. After running git init, the response from the terminal was that we initialized Git.
+
+To push local changes to GitHub, I ran three commands. The first command I ran was "git add ." which adds our changes to a staging area. The second command I ran was "git commit", which is the command for saving the changes in our staging area. The third command we ran was "git push -u origin master", which pushes the code changes we saved to our remote or online repository.
+
+When we committed changes to GitHub, Git asked for our credentials because it needs to authenticate us before letting us make changes to the repository.
 
 Throughout this challenge, I gained hands-on experience with the core DevOps workflows that power modern cloud development — from making my first commit to seeing code deploy automatically to AWS.`,
     goals: [
